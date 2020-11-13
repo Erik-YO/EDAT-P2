@@ -134,7 +134,7 @@ void query_productStockInterface(SQLHSTMT *stmt, SQLINTEGER *result, SQLCHAR *pr
 int query_productFind(SQLHSTMT *stmt, FILE *out){
   SQLRETURN ret; /* ODBC API return status */
   SQLCHAR productcode[MY_CHAR_LEN], productname[MY_CHAR_LEN];
-  char string[MY_CHAR_LEN], query[MY_CHAR_LEN]="select p.productcode, p.productname from products p where p.productname like '%";
+  char string[MY_CHAR_LEN], query[MY_CHAR_LEN]="select p.productcode, p.productname from products p where UPPER(p.productname) like UPPER('%";
 
 
 
@@ -143,12 +143,11 @@ int query_productFind(SQLHSTMT *stmt, FILE *out){
   if(!stmt || !out) return 1;
 
 
-  fprintf(out," > ");
   if(fflush(out)!=0) printf("ERROR FFLUSH");
   if(scanf("%s", string)==EOF) printf("ERROR SCANF");
 
   strcat(query, string);
-  strcat(query, "%' order by p.productcode");
+  strcat(query, "%') order by p.productcode");
 
   ret=SQLPrepare((*stmt), (SQLCHAR*) query, SQL_NTS);
   if(!SQL_SUCCEEDED(ret)) printf("ERROR SQLPREPARE %d\n", ret);
@@ -184,11 +183,12 @@ void query_productFindInterface(SQLHSTMT *stmt, SQLCHAR *pcode, SQLCHAR *pname, 
   SQLRETURN ret;
   int a=1;
 
-  printf("\n\t| Product code\t| Product name\n");
-  printf(  "--------+-----------------+--------------\n");
-
 
   while(SQL_SUCCEEDED(ret = SQLFetch(*stmt))) {
+    if(a==1){
+      printf("\n\t| Product code\t| Product name\n");
+      printf(  "--------+-----------------+--------------\n");
+    }
       printf("   %d\t| %s\t| %s\t\n", a, (char*) pcode, (char*) pname);
       a++;
       if((a%10)==0){
@@ -201,7 +201,7 @@ void query_productFindInterface(SQLHSTMT *stmt, SQLCHAR *pcode, SQLCHAR *pname, 
   printf("\n");
   if(a==1) printf("\n < No product named \'%s\' >\n\n",string);
 
-  printf(" < Press ENTER to exit >\n");
+
 
 
   /*stop();*/
