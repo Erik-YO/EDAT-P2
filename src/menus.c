@@ -41,7 +41,7 @@ static void menus_changeScreen(FILE *out);
 */
 static void menus_input(char *c);
 /**
-* menus_inputError Imprime un mensaje de error 
+* menus_inputError Imprime un mensaje de error
 *
 * @date 28-10-2020
 * @author: Erik Yuste
@@ -80,7 +80,7 @@ static void menus_productsPrint(FILE *out);
 * menus_ordersPrint Imprime la interfaz que ve el usuario en el menu de pedidos
 *
 * @date W.I.P.
-* @author: 
+* @author:
 *
 * @param out Puntero a FILE donde se imprimirá el menu
 */
@@ -89,7 +89,7 @@ static void menus_ordersPrint(FILE *out);
 * menus_clientesPrint Imprime la interfaz que ve el usuario en el menu de clientes
 *
 * @date W.I.P.
-* @author: 
+* @author:
 *
 * @param out Puntero a FILE donde se imprimirá el menu
 */
@@ -111,7 +111,7 @@ static int menus_products(SQLHSTMT *stmt, FILE *out);
 * menus_orders Implementa la lógica del menu de pedidos
 *
 * @date W.I.P.
-* @author: 
+* @author:
 *
 * @param Puntero a SQLHSTMT
 * @param out Puntero a FILE donde se imprimirá el menu
@@ -122,7 +122,7 @@ static int menus_orders(SQLHSTMT *stmt, FILE *out);
 * menus_customers Implementa la lógica del menu de clientes
 *
 * @date W.I.P.
-* @author: 
+* @author:
 *
 * @param Puntero a SQLHSTMT
 * @param out Puntero a FILE donde se imprimirá el menu
@@ -170,6 +170,18 @@ static int menus_productsStock(SQLHSTMT *stmt, FILE *out);
 static int menus_productsFind(SQLHSTMT *stmt, FILE *out);
 
 
+/*Customers*/
+/**
+* menus_customersFind Llama a la función que hace la query 'Find'
+*
+* @date 13-11-2020
+* @author: Erik Yuste
+*
+* @param Puntero a SQLHSTMT
+* @param out Puntero a FILE donde se imprimirá el resultado
+* @return Devuelve 0 si no ha habido ningún error y otro entero si lo ha habido
+*/
+int menus_customersFind(SQLHSTMT *stmt, FILE *out);
 
 
 
@@ -185,11 +197,13 @@ void menus_input(char *c){
   int er=0;
   if(!c) return;
 
-  er=fseek(stdin,0,SEEK_END); 
-  er+=system("stty -echo"); 
+  fflush(stdout);
+
+  er=fseek(stdin,0,SEEK_END);
+  er+=system("stty -echo");
   er+=system("/bin/stty raw");
   (*c) = getchar();
-  er+=system("/bin/stty cooked"); 
+  er+=system("/bin/stty cooked");
   er+=system("stty echo");
 
   return;
@@ -209,9 +223,12 @@ int menus_general(SQLHSTMT *stmt, FILE *out){
   if(!out || !stmt) return 1;
 
   while(end==0){
-    menus_generalPrint(out);
+    if(c!='\n') menus_generalPrint(out);
 
     menus_input(&c);
+
+
+    menus_changeScreen(out);
 
     if(c=='1'){
       if(menus_products(stmt, out)!=0){
@@ -228,7 +245,7 @@ int menus_general(SQLHSTMT *stmt, FILE *out){
     }else if(c=='4'){
       end=1;
       menus_exit(out);
-    }else{
+    }else if(c!='\n'){
       menus_inputError(out);
     }
 
@@ -251,10 +268,12 @@ int menus_products(SQLHSTMT *stmt, FILE *out){
 
   if(!out || !stmt) return 1;
 
+
   while(end==0){
-    menus_productsPrint(out);
+    if(c!='\n') menus_productsPrint(out);
 
     menus_input(&c);
+
 
     if(c=='1'){
       if(menus_productsStock(stmt, out)!=0){
@@ -267,7 +286,7 @@ int menus_products(SQLHSTMT *stmt, FILE *out){
     }else if(c=='3'){
       end=1;
       menus_exit(out);
-    }else{
+    }else if(c!='\n'){
       menus_inputError(out);
     }
 
@@ -285,8 +304,35 @@ int menus_orders(SQLHSTMT *stmt, FILE *out){
   return 0;
 }
 int menus_customers(SQLHSTMT *stmt, FILE *out){
-  if(!out||!stmt) return 1;
-  menus_customersPrint(out);
+  char c=' ';
+  int end=0;
+
+  if(!out || !stmt) return 1;
+
+
+  while(end==0){
+    if(c!='\n') menus_customersPrint(out);
+
+    menus_input(&c);
+
+
+    if(c=='1'){
+      if(menus_customersFind(stmt, out)!=0){
+         printf("\n > An error occurred while loading the products stock. < \n");
+      }
+    }else if(c=='2'){
+
+    }else if(c=='3'){
+      
+    }else if(c=='4'){
+      end=1;
+      menus_exit(out);
+    }else if(c!='\n'){
+      menus_inputError(out);
+    }
+
+  }
+
   return 0;
 }
 
@@ -323,8 +369,37 @@ int menus_productsFind(SQLHSTMT *stmt, FILE *out){
 
 /* Orders options */
 
+int menus_ordersOpen(SQLHSTMT *stmt, FILE *out){
+
+  if(query_productStock(stmt, out)!=0) return 1;
+
+  return 0;
+}
+int menus_ordersRange(SQLHSTMT *stmt, FILE *out){
+
+  printf("\nEnter dates (YYYY-MM-DD - YYYY-MM-DD) > ");
+  if(query_productFind(stmt, out)!=0) return 1;
+
+  return 0;
+}
+int menus_ordersDetail(SQLHSTMT *stmt, FILE *out){
+
+  printf("\nEnter ordernumber > ");
+  if(query_productFind(stmt, out)!=0) return 1;
+
+  return 0;
+}
+
 /* Customers options */
 
+int menus_customersFind(SQLHSTMT *stmt, FILE *out){
+
+  if(!stmt||!out) return 1;
+  printf("\nEnter customer name > ");
+  if(query_customersFind(stmt, out)!=0) return 1;
+
+  return 0;
+}
 
 
 
@@ -356,7 +431,7 @@ void menus_generalPrint(FILE *out){
 }
 
 void menus_productsPrint(FILE *out){
-  menus_changeScreen(out);
+
 
   fprintf(out, "\n\n ##########################\n");
   fprintf(out, " # Choose products option #\n");
@@ -368,7 +443,6 @@ void menus_productsPrint(FILE *out){
 }
 
 void menus_ordersPrint(FILE *out){
-  menus_changeScreen(out);
 
   fprintf(out, "\n\n ########################\n");
   fprintf(out, " # Choose orders option #\n");
@@ -380,7 +454,6 @@ void menus_ordersPrint(FILE *out){
 }
 
 void menus_customersPrint(FILE *out){
-  menus_changeScreen(out);
 
   fprintf(out, "\n\n ##########################\n");
   fprintf(out, " # Choose customer option #\n");
