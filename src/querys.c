@@ -277,19 +277,25 @@ int query_customersFind(SQLHSTMT *stmt, FILE *out){
 void query_customersFindInterface(SQLHSTMT *stmt, SQLCHAR *cnum, SQLCHAR *cname, SQLCHAR *cfn, SQLCHAR *csn,char *string){
   SQLRETURN ret;
   int a=1;
+  char titulo[]="    | Number\t| Customer Name \t| Customer First Name\t| Customer Second Name\n";
 
   while(SQL_SUCCEEDED(ret = SQLFetch(*stmt))) {
     if(a==1){
-      printf("\n\t| Customer number\t| Customer name\t| Customer First Name\t| Customer Second Name\n");
-      printf(  "--------+-----------------+--------------\n");
+      printf("\n%s", titulo);
+      printf(  "----+-----------+-----------------------+-----------------------+---------------------\n");
     }
-      printf("   %d\t| %s\t| %s\t| %s\t| %s\t\n", a, (char*) cnum, (char*) cname, (char*)cfn, (char*)csn);
+
+    if(a<10)
+      printf(" 0%d | %s\t| %s\t| %s\t| %s\t\n", a, (char*) cnum, (char*) cname, (char*)cfn, (char*)csn);
+    else
+      printf(" %d | %s\t| %s\t| %s\t| %s\t\n", a, (char*) cnum, (char*) cname, (char*)cfn, (char*)csn);
+
       a++;
       if((a%10)==0){
 
         stop();
-        printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\t| Customer number\t| Customer name\t| Customer First Name\t| Customer Second Name\n");
-        printf(  "--------+-----------------+--------------\n");
+        printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n%s", titulo);
+        printf(  "----+-----------+-----------------------+-----------------------+---------------------\n");
       }
   }
   printf("\n");
