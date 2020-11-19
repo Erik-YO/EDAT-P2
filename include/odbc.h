@@ -1,26 +1,22 @@
-/**
- * @brief It defines the odbc functions to connect to the database
- *
- * @file odbc.h
- * @author Profesores de EDAT
- */
-
-
 #ifndef AUX_H
 #define AUX_H
 
-
-
+#include <sql.h>
+#include <sqlext.h>
 
 /* CONNECTION PARAMETERS, ADAPT TO YOUR SCENARIO */
-#define CONNECTION_PARS "DRIVER=PostgreSQL ANSI;DATABASE=classicmodels;SERVER=localhost;PORT=5432;UID=alumnodb;PWD=alumnodb;"
-
+#define CONNECTION_PARS "driver={PostgreSQL ANSI};uid=alumnodb;" \
+        "pwd=alumnodb;server=localhost;database=classicmodels"
 
 
 /* STANDARD CONNECTION PROCEDURE */
-SQLRETURN odbc_connect(SQLHENV* env, SQLHDBC* dbc);
+int odbc_connect(SQLHENV* env, SQLHDBC* dbc);
 
 /* STANDARD DISCONNECTION PROCEDURE */
-SQLRETURN odbc_disconnect(SQLHENV env, SQLHDBC dbc);
+int odbc_disconnect(SQLHENV env, SQLHDBC dbc);
 
+/* check errors */
+#define CHECK_ERROR(e, s, h, t) {\
+            if (e!=SQL_SUCCESS && e != SQL_SUCCESS_WITH_INFO) {odbc_extract_error(s, h, t); goto exit;} \
+}
 #endif
