@@ -82,7 +82,8 @@ $(OBJ)/odbc.o: $(SRC)/odbc.c $(INC)/odbc.h
 
 
 
-
+splint:
+	splint -nullpass *.c *.h > splint.log
 
 
 
