@@ -1,31 +1,11 @@
 main.c: (in function main)
-main.c:38:22: Passed storage &env not completely defined:
+main.c:34:34: Passed storage &env not completely defined:
                  odbc_connect (&env, ...)
   Storage derivable from a parameter, return value or global is not defined.
   Use /*@out@*/ to denote passed or returned storage which need not be defined.
   (Use -compdef to inhibit warning)
-main.c:38:28: Passed storage &dbc not completely defined:
+main.c:34:40: Passed storage &dbc not completely defined:
                  odbc_connect (..., &dbc)
-main.c:44:30: Passed storage &stmt not completely defined:
+main.c:40:43: Passed storage &stmt not completely defined:
                  SQLAllocHandle (..., &stmt)
-menus.c: (in function menus_input)
-menus.c:51:3: Assignment of int to char: (*c) = getchar()
-  To make char and int types equivalent, use +charint.
-odbc.c: (in function odbc_extract_error)
-odbc.c:23:48: Passed storage state not completely defined (*state is
-                 undefined): SQLGetDiagRec (..., state, ...)
-odbc.c:23:55: Passed storage &native not completely defined:
-                 SQLGetDiagRec (..., &native, ...)
-odbc.c:23:64: Passed storage text not completely defined (*text is undefined):
-                 SQLGetDiagRec (..., text, ...)
-odbc.c:23:98: Passed storage &len not completely defined:
-                 SQLGetDiagRec (..., &len)
-querys.c: (in function query_productStock)
-querys.c:38:51: Passed storage productcode not completely defined (*productcode
-                   is undefined): SQLBindParameter (..., productcode, ...)
-querys.c: (in function query_productFind)
-querys.c:119:31: Passed storage productcode not completely defined
-    (*productcode is undefined): SQLBindCol (..., productcode, ...)
-querys.c:122:31: Passed storage productname not completely defined
-    (*productname is undefined): SQLBindCol (..., productname, ...)
 
