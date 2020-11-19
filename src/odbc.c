@@ -3,6 +3,10 @@
 #include "odbc.h"
 
 
+
+/* report most recient error */
+static void odbc_extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type);
+
 /**
  * @brief REPORT OF THE MOST RECENT ERROR USING HANDLE handle
  * @param fn: Error message
@@ -10,7 +14,7 @@
  * @param type: type of handle (environment, connection, statement)
  * @author edat
  */
-void odbc_extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type) {
+static void odbc_extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type) {
     #define BufferLength 256
     SQLSMALLINT i = 0;
     SQLINTEGER native = 0;
