@@ -86,7 +86,7 @@ $(OBJ)/odbc.o: $(SRC)/odbc.c $(INC)/odbc.h
 permisions:
 	chmod +x *.sh
 
-test: compile
+test: compile permisions
 	./products_stock.sh
 	./products_find.sh
 	./orders_open.sh
