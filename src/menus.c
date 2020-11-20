@@ -79,8 +79,8 @@ static void menus_productsPrint(FILE *out);
 /**
 * menus_ordersPrint Imprime la interfaz que ve el usuario en el menu de pedidos
 *
-* @date W.I.P.
-* @author:
+* @date 14-11-2020
+* @author: Lucia Martinez-Valero
 *
 * @param out Puntero a FILE donde se imprimirá el menu
 */
@@ -88,8 +88,8 @@ static void menus_ordersPrint(FILE *out);
 /**
 * menus_clientesPrint Imprime la interfaz que ve el usuario en el menu de clientes
 *
-* @date W.I.P.
-* @author:
+* @date 15-11-2020
+* @author: Erik Yuste
 *
 * @param out Puntero a FILE donde se imprimirá el menu
 */
