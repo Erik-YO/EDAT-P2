@@ -25,7 +25,7 @@ expect "1958 Setra Bus 49"
 expect "2002 Suzuki XREO 21"
 expect "1969 Corvair Monza 125"
 
-send ">\r"
+send -- ">\r"
 
 expect "1968 Dodge Charger 59"
 expect "1969 Ford Falcon 49"
@@ -38,7 +38,7 @@ expect "1937 Lincoln Berline 103"
 expect "1936 Mercedes-Benz 500K Special Roadster 68"
 expect "1965 Aston Martin DB5 101"
 
-send ">\r"
+send -- ">\r"
 
 expect "1980s Black Hawk Helicopter 74"
 expect "1917 Grand Touring Sedan 39"
@@ -51,7 +51,7 @@ expect "1932 Model A Ford J-Coupe 40"
 expect "1926 Ford Fire Engine 77"
 expect "P-51-D Mustang 70"
 
-send ">\r"
+send -- ">\r"
 
 expect "1936 Harley Davidson El Knucklehead 36"
 expect "1928 Mercedes-Benz SSK 104"
@@ -64,7 +64,7 @@ expect "1903 Ford Model A 140"
 expect "1992 Ferrari 360 Spider red 308"
 expect "Collectable Wooden Train 137"
 
-send ">\r"
+send -- ">\r"
 
 expect "1969 Dodge Super Bee 55"
 expect "1917 Maxwell Touring Car 36"
@@ -77,7 +77,7 @@ expect "1932 Alfa Romeo 8C2300 Spider Sport 73"
 expect "1904 Buick Runabout 123"
 expect "1939 Cadillac Limousine 56"
 
-send ">\r"
+send -- ">\r"
 
 expect "1957 Corvette Convertible 74"
 expect "1957 Ford Thunderbird 75"
@@ -90,7 +90,7 @@ expect "1939 Chevrolet Deluxe Coupe 64"
 expect "18th century schooner 74"
 expect "1938 Cadillac V-16 Presidential Limousine 90"
 
-send ">\r"
+send -- ">\r"
 
 expect "1962 Volkswagen Microbus 140"
 expect "1982 Ducati 900 Monster 83"
@@ -103,7 +103,7 @@ expect "1912 Ford Model T Delivery Wagon 30"
 expect "1969 Chevrolet Camaro Z28 129"
 expect "1971 Alpine Renault 1600s 124"
 
-send ">\r"
+send -- ">\r"
 
 expect "1937 Horch 930V Limousine 81"
 expect "2002 Chevy Corvette 174"
@@ -116,7 +116,7 @@ expect "1936 Chrysler Airflow 81"
 expect "1900s Vintage Tri-Plane 96"
 expect "1961 Chevrolet Impala 69"
 
-send ">\r"
+send -- ">\r"
 
 #expect "1980âs GM Manhattan Express 41"
 expect "1997 BMW F650 ST 23"
@@ -129,7 +129,7 @@ expect "1974 Ducati 350 Mk3 Desmo 82"
 expect "1930 Buick Marquette Phaeton 96"
 expect "Diamond T620 Semi-Skirted Tanker 141"
 
-send ">\r"
+send -- ">\r"
 
 expect "1962 City of Detroit Streetcar 145"
 expect "2002 Yamaha YZR M1 40"
@@ -142,7 +142,7 @@ expect "The USS Constitution Ship 66"
 expect "1982 Camaro Z28 73"
 expect "ATA: B757-300 27"
 
-send ">\r"
+send -- ">\r"
 
 expect "F/A 18 Hornet 1/72 59"
 expect "The Titanic 126"
@@ -152,7 +152,7 @@ expect "Boeing X-32A JSF 71"
 expect "Pont Yacht 113"
 
 
-send "q\r"
+send -- "q\r"
 
 puts "\n--------------------------------OK\n"
 
