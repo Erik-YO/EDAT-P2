@@ -108,10 +108,36 @@ static void query_customersListProductsInterface(SQLHSTMT *stmt, SQLINTEGER cnum
 static void query_customersBalanceInterface(SQLHSTMT *stmt, SQLINTEGER cnum, SQLDOUBLE *saldo);
 
 
+/**
+* querys_input Obtiene un caracter del usuario
+*
+* @date 19-11-2020
+* @author: Erik Yuste
+*
+* @param c Puntero a char
+*/
 static void querys_input(char *c);
 
+/**
+* querys_printPage imprime la pagina (10 elementos) del fichero
+*
+* @date 19-11-2020
+* @author: Erik Yuste
+*
+* @param fname string del nombre del fichero
+* @param pag el numero de la pagina
+* @param titulo string del titulo de la pagina
+*/
 static void querys_printPage(char *fname, int pag, char *titulo);
 
+/**
+* querys_deleteFile elimina un fichero
+*
+* @date 19-11-2020
+* @author: Erik Yuste
+*
+* @param fname string del nombre del fichero
+*/
 static void querys_deleteFile(char *fname);
 
 
