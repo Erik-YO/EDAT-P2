@@ -108,6 +108,81 @@ static void query_customersListProductsInterface(SQLHSTMT *stmt, SQLINTEGER cnum
 static void query_customersBalanceInterface(SQLHSTMT *stmt, SQLINTEGER cnum, SQLDOUBLE *saldo);
 
 
+static void querys_input(char *c);
+
+static void querys_printPage(char *fname, int pag, char *titulo);
+
+static void querys_deleteFile(char *fname);
+
+
+
+
+
+
+
+/* IMPLEMENTACIONES */
+
+static void querys_input(char *c){
+  int er=0;
+  if(!c) return;
+
+  (void) fflush(stdout);
+
+  er=fseek(stdin,0,SEEK_END);
+  er+=system("stty -echo");
+  er+=system("/bin/stty raw");
+  (*c) = (char) getchar();
+  er+=system("/bin/stty cooked");
+  er+=system("stty echo");
+
+  return;
+}
+
+static void querys_printPage(char *fname, int pag, char *titulo){
+  FILE *f=NULL;
+  int i=0;
+  char registro[MY_CHAR_LEN]=" \n";
+
+
+  f=fopen(fname,"r");
+  if(!f) return;
+
+  printf("%s\n",titulo);
+
+  while(fgets(registro, MY_CHAR_LEN, f)!=NULL){
+
+    if(i/10==pag){
+      printf("%s", registro);
+    }else if(i/10>pag) break;
+
+    i++;
+  }
+
+  (void)fclose(f);
+
+  return;
+}
+
+static void querys_deleteFile(char *fname){
+  char rem[50]="rm ./";
+  int err=0;
+
+  strcat(rem, fname);
+
+  err+=system("stty -echo");
+  err+=system(rem);
+  err+=system("stty echo");
+
+  return;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -412,35 +487,49 @@ int query_customersFind(SQLHSTMT *stmt, FILE *out){
 
 void query_customersFindInterface(SQLHSTMT *stmt, SQLCHAR *cnum, SQLCHAR *cname, SQLCHAR *cfn, SQLCHAR *csn,char *string){
   SQLRETURN ret;
-  int a=1;
-  char titulo[]="    | Number | Customer Name \t| Customer First Name\t| Customer Second Name\n";
+  FILE *f=NULL;
+  int pag=0, nreg=0;
+  char titulo[]="Number | Customer Name \t| Customer First Name\t| Customer Second Name\n", input=' ';
+
 
   if(!stmt||!cnum||!cname||!cfn||!csn||!string){
     printf("INTERFACE FAILURE\n");
     return;
   }
 
-  while(SQL_SUCCEEDED(ret = SQLFetch(*stmt))) {
-    if(a==1){
-      printf("\n%s", titulo);
-      printf(  "----+--------+-----------------------+-----------------------+---------------------\n");
-    }
+  f=fopen(TEMP_FILE, "w");
+  if(!f) return;
 
-    if(a<10)
-      printf(" 0%d | %s    | %s\t| %s\t| %s\t\n", a, (char*) cnum, (char*) cname, (char*)cfn, (char*)csn);
-    else
-      printf(" %d | %s    | %s\t| %s\t| %s\t\n", a, (char*) cnum, (char*) cname, (char*)cfn, (char*)csn);
-
-      a++;
-      if((a%10)==0){
-
-        stop();
-        printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n%s", titulo);
-        printf(  "----+--------+-----------------------+-----------------------+---------------------\n");
-      }
+  while(SQL_SUCCEEDED(ret = SQLFetch(*stmt))){
+    fprintf(f,"%s    | %s\t| %s\t| %s\n", (char*) cnum, (char*) cname, (char*)cfn, (char*)csn);
+    nreg++;
   }
-  printf("\n");
-  if(a==1) printf("\n < No product named \'%s\' >\n\n",string);
+
+  (void)fclose(f);
+
+  if(nreg==0){
+    printf("\n");
+    printf("\n < No product named \'%s\' >\n\n",string);
+    querys_deleteFile(TEMP_FILE);
+    return;
+  }
+
+
+  do{
+
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+    querys_printPage(TEMP_FILE, pag, titulo);
+
+    querys_input(&input);
+    if(input=='<'&&pag>0) pag--;
+    else if(input=='>'&&pag<(nreg/10)) pag++;
+
+  }while(input!='q');
+
+  printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+  querys_deleteFile(TEMP_FILE);
 
   /*stop();*/
 
@@ -504,35 +593,45 @@ int query_customersListProducts(SQLHSTMT *stmt, FILE *out){
 
 void query_customersListProductsInterface(SQLHSTMT *stmt, SQLINTEGER cnum, SQLCHAR *pname, SQLINTEGER *qordered){
   SQLRETURN ret;
-  int a=1;
-  char titulo[]="    | Product Name \t| Quantity Ordered\n";
+  FILE *f=NULL;
+  int pag=0, nreg=0;
+  char titulo[]="Product Name \t| Quantity Ordered\n", input=' ';
 
-  if(!stmt||!pname||!qordered){
-    printf("INTERFACE FAILURE\n");
+
+  f=fopen(TEMP_FILE, "w");
+  if(!f) return;
+
+  while(SQL_SUCCEEDED(ret = SQLFetch(*stmt))){
+    fprintf(f,"%s %d\n", (char*) pname, (int) *qordered);
+    nreg++;
+  }
+
+  (void)fclose(f);
+
+  if(nreg==0){
+    printf("\n");
+    printf("\n < No product ordered by the customer with the code \'%d\' >\n\n",(int) cnum);
+    querys_deleteFile(TEMP_FILE);
     return;
   }
 
-  while(SQL_SUCCEEDED(ret = SQLFetch(*stmt))) {
-    if(a==1){
-      printf("\n%s", titulo);
-      printf(  "----+-----------+-----------------------+-----------------------+---------------------\n");
-    }
 
-    if(a<10)
-      printf(" 0%d | %s %d\n", a, (char*) pname, (int) *qordered);
-    else
-      printf(" %d | %s %d\n", a, (char*) pname, (int) *qordered);
+  do{
 
-      a++;
-      /*if((a%10)==0){
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
-        stop();
-        printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n%s", titulo);
-        printf(  "----+-----------+-----------------------+-----------------------+---------------------\n");
-      }*/
-  }
-  printf("\n");
-  if(a==1) printf("\n < No product ordered by the customer with the code \'%d\' >\n\n",(int) cnum);
+    querys_printPage(TEMP_FILE, pag, titulo);
+
+    querys_input(&input);
+    if(input=='<'&&pag>0) pag--;
+    else if(input=='>'&&pag<(nreg/10)) pag++;
+
+  }while(input!='q');
+
+  printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+
+  querys_deleteFile(TEMP_FILE);
 
   /*stop();*/
 
