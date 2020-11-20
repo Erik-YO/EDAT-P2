@@ -6,7 +6,11 @@ Implementación de una interfaz de usuario a la base de datos classicmodels util
 
 
 
-- para 
+- para crear la base de datos
+
+make all
+o
+make
 
 
 - para probar todos los ficheros .sh:
